@@ -1,3 +1,8 @@
+# Changes made to forked library
+[Added function to send custom header when connecting websocket]
+wsClient.setCustomHeader("Origin: http://myserver.com/");    
+wsClient.begin("/path");
+
 # ArduinoHttpClient
 
 ArduinoHttpClient is a library to make it easier to interact with web servers from Arduino.
