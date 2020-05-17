@@ -3,26 +3,29 @@
 
 #include "b64.h"
 
-#include "WebSocketClient.h"
+#include "WebSocketClient.h" 
 
 WebSocketClient::WebSocketClient(Client& aClient, const char* aServerName, uint16_t aServerPort)
  : HttpClient(aClient, aServerName, aServerPort),
    iTxStarted(false),
-   iRxSize(0)
+   iRxSize(0),
+   customHeaderMasked(false)
 {
 }
 
 WebSocketClient::WebSocketClient(Client& aClient, const String& aServerName, uint16_t aServerPort) 
  : HttpClient(aClient, aServerName, aServerPort),
    iTxStarted(false),
-   iRxSize(0)
+   iRxSize(0),
+   customHeaderMasked(false)
 {
 }
 
 WebSocketClient::WebSocketClient(Client& aClient, const IPAddress& aServerAddress, uint16_t aServerPort)
  : HttpClient(aClient, aServerAddress, aServerPort),
    iTxStarted(false),
-   iRxSize(0)
+   iRxSize(0),
+   customHeaderMasked(false)
 {
 }
 
@@ -47,6 +50,11 @@ int WebSocketClient::begin(const char* aPath)
         b64_encode(randomKey, sizeof(randomKey), (unsigned char*)base64RandomKey, sizeof(base64RandomKey));
 
         // start the connection upgrade sequence
+		Serial.println("Sending Header");		
+        
+        //set the custom header, if present
+        if(customHeaderMasked) sendHeader(_customHeader);
+        
         sendHeader("Upgrade", "websocket");
         sendHeader("Connection", "Upgrade");
         sendHeader("Sec-WebSocket-Key", base64RandomKey);
@@ -54,7 +62,10 @@ int WebSocketClient::begin(const char* aPath)
         endRequest();
 
         status = responseStatusCode();
-
+		
+        Serial.print("Status Response Code:");
+		Serial.println(status);		
+		
         if (status > 0)
         {
             skipResponseHeaders();
@@ -263,6 +274,20 @@ int WebSocketClient::parseMessage()
 
     return iRxSize;
 }
+
+
+ void WebSocketClient::setCustomHeader(String inData)
+ {
+     if(inData.isEmpty() || inData == NULL || inData == "")
+     { 
+        customHeaderMasked = false;
+     }
+     else 
+     {
+        customHeaderMasked = true;
+        _customHeader = inData;
+     }
+ }
 
 int WebSocketClient::messageType()
 {
