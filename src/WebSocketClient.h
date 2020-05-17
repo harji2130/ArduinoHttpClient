@@ -88,7 +88,8 @@ private:
     uint8_t iTxMessageType;
     uint8_t iTxBuffer[128];
     uint64_t iTxSize;
-
+    bool customHeaderMasked;
+    String _customHeader;
     uint8_t iRxOpCode;
     uint64_t iRxSize;
     bool iRxMasked;
