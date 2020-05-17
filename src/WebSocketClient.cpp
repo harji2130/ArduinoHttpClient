@@ -50,7 +50,7 @@ int WebSocketClient::begin(const char* aPath)
         b64_encode(randomKey, sizeof(randomKey), (unsigned char*)base64RandomKey, sizeof(base64RandomKey));
 
         // start the connection upgrade sequence
-		Serial.println("Sending Header");		
+	//	Serial.println("Sending Header");		
         
         //set the custom header, if present
         if(customHeaderMasked) sendHeader(_customHeader);
@@ -63,8 +63,8 @@ int WebSocketClient::begin(const char* aPath)
 
         status = responseStatusCode();
 		
-        Serial.print("Status Response Code:");
-		Serial.println(status);		
+      // Serial.print("Status Response Code:");
+      // Serial.println(status);		
 		
         if (status > 0)
         {
