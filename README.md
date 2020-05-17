@@ -1,5 +1,6 @@
 # Changes made to forked library
 [Added function to send custom header when connecting websocket]
+
 wsClient.setCustomHeader("Origin: http://myserver.com/");    
 wsClient.begin("/path");
 
